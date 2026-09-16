@@ -1,0 +1,24 @@
+name: events-ios
+description: The Barry event feed on a phone — read, filter, and clear the backlog
+
+# The bag that owns the event concept, its table, and its `record_event` tool.
+# Declared as a requirement rather than a sub-bag: the phone app needs events
+# registered, never its tools.
+#
+# The HTTP routes this app actually calls (`/api/v1/events`) live in the main
+# barry API server, which is core infrastructure rather than a bag — so it
+# cannot be named here, and this is the closest honest declaration.
+requires:
+  events:
+    reason: the app is a read client of the events feed, and ships no backend of its own
+
+apps:
+  EventsiOS:
+    description: Read and triage the Barry event feed from a phone
+    platform: ios
+    project: .
+    scheme: Events
+    bundle-id: rocks.barry.events.app
+    # No paid-only entitlements (no app groups, push, or keychain sharing), so
+    # a free personal team can sign this for a device.
+    device: true

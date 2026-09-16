@@ -1,0 +1,55 @@
+name: Events
+options:
+  bundleIdPrefix: rocks.barry.events
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    # Simulator-first: a fresh clone builds with no provisioning profile.
+    # `barry ios build --device` layers signing on as xcodebuild overrides
+    # rather than editing it in here, which keeps that property intact.
+    CODE_SIGNING_ALLOWED: "NO"
+    CODE_SIGN_IDENTITY: ""
+targets:
+  Events:
+    type: application
+    platform: iOS
+    sources:
+      - App
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Events
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        # The API is plain HTTP over a tailnet, not TLS — it binds loopback on
+        # the Mac and is reached through Caddy/Tailscale.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"
+        PRODUCT_BUNDLE_IDENTIFIER: rocks.barry.events.app
+  EventsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests
+    dependencies:
+      - target: Events
+schemes:
+  Events:
+    build:
+      targets:
+        Events: all
+        EventsTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - EventsTests

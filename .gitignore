@@ -1,0 +1,6 @@
+.DS_Store
+xcuserdata/
+*.xcuserstate
+DerivedData/
+# `barry ios build` puts DerivedData here so builds do not collide with Xcode's.
+.build-barry-ios/
