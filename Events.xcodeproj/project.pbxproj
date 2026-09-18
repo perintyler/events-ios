@@ -8,18 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		043EC9F0165AA12AC05B85A9 /* EventsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EB166E1C24366F438B54A7 /* EventsClient.swift */; };
+		0F951095FF37C2761C538B69 /* ConnectionProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A42F13286291538A8871333E /* ConnectionProbeTests.swift */; };
 		141F317E03A513474E14E24A /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46BBA84EB7AF08A86BC5C06 /* EventDetailView.swift */; };
 		1AAE48C273E60A0E9A53B073 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA1D44FF4BA1E3C1EF8F92D /* RootView.swift */; };
 		523212AD1BE1FD99E36DBAC4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9B88A2254BDAD14D470E1F /* Theme.swift */; };
 		572BB61CC56D851F3A5FD0C5 /* ServerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE1BEBE45510460320E827 /* ServerConfig.swift */; };
+		5976F04D8C1AD596F3AB0ACE /* EventAnnouncement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6963BA8C9E3AD96E7EE8769 /* EventAnnouncement.swift */; };
 		61D8A607B646AD2A030184C0 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CEE9340B855EA44B670926 /* Event.swift */; };
 		62F31A82E16D823F2D874BE3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2688C86DACC5EA5C5BFC6275 /* SettingsView.swift */; };
 		6F41E056F72A72DDF405554C /* EventModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52B70C5656E2C3E7F2531C4 /* EventModelTests.swift */; };
 		85E2CA2A56AA61E856CF5F95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D821B446FA96916CBFA3C607 /* Assets.xcassets */; };
 		88F22FF77C42044B5CCAF9C7 /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF46525557F5705883B0596 /* FeedView.swift */; };
 		8931D975CE28E3AAB0FAF1FB /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE73C901E8166088AB0C546 /* AppStore.swift */; };
+		8C793EF60B9197BBC6861A2A /* ConnectionProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3607F3540A8BDB20BDB86B0C /* ConnectionProbe.swift */; };
 		9968EF6CFD9D77BF8210E6B5 /* EventsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503ACEB3ACB8FD663AA6535B /* EventsApp.swift */; };
 		9E15CDD71A138D1B4DD5DE0D /* FeedGroupingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C599AF274F6F9C5F2C4BE7B9 /* FeedGroupingTests.swift */; };
+		A210A96407D090DDD5727E1D /* Notifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DCFCA40B6A9ED17A2194B2 /* Notifier.swift */; };
+		E58F1BB9F5E4509AAC146F6A /* EventAnnouncementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BEB0F9415F3A81092AD91A /* EventAnnouncementTests.swift */; };
 		EFB1EDF6D9A95FD81CA4C8EE /* LiveEventsAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF20E0A91EA2DE67FC04E3D4 /* LiveEventsAPITests.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,17 +39,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		14BEB0F9415F3A81092AD91A /* EventAnnouncementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAnnouncementTests.swift; sourceTree = "<group>"; };
 		2688C86DACC5EA5C5BFC6275 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2ABE1BEBE45510460320E827 /* ServerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfig.swift; sourceTree = "<group>"; };
+		3607F3540A8BDB20BDB86B0C /* ConnectionProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionProbe.swift; sourceTree = "<group>"; };
 		4A7BBDE6696BAA410CD30417 /* EventsTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = EventsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		503ACEB3ACB8FD663AA6535B /* EventsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsApp.swift; sourceTree = "<group>"; };
 		71EB166E1C24366F438B54A7 /* EventsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsClient.swift; sourceTree = "<group>"; };
+		88DCFCA40B6A9ED17A2194B2 /* Notifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifier.swift; sourceTree = "<group>"; };
 		99EBC4A3EDE1E8C1F6B02717 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9B9B88A2254BDAD14D470E1F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A42F13286291538A8871333E /* ConnectionProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionProbeTests.swift; sourceTree = "<group>"; };
 		A45981D6417A90DF15DC2795 /* Events.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Events.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CEE9340B855EA44B670926 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		BCE73C901E8166088AB0C546 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		C599AF274F6F9C5F2C4BE7B9 /* FeedGroupingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedGroupingTests.swift; sourceTree = "<group>"; };
+		C6963BA8C9E3AD96E7EE8769 /* EventAnnouncement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAnnouncement.swift; sourceTree = "<group>"; };
 		CAA1D44FF4BA1E3C1EF8F92D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D46BBA84EB7AF08A86BC5C06 /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		D52B70C5656E2C3E7F2531C4 /* EventModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModelTests.swift; sourceTree = "<group>"; };
@@ -68,6 +78,8 @@
 		8BB9E073E1CDBB011E2FF1C5 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				A42F13286291538A8871333E /* ConnectionProbeTests.swift */,
+				14BEB0F9415F3A81092AD91A /* EventAnnouncementTests.swift */,
 				D52B70C5656E2C3E7F2531C4 /* EventModelTests.swift */,
 				C599AF274F6F9C5F2C4BE7B9 /* FeedGroupingTests.swift */,
 				EF20E0A91EA2DE67FC04E3D4 /* LiveEventsAPITests.swift */,
@@ -80,10 +92,13 @@
 			children = (
 				BCE73C901E8166088AB0C546 /* AppStore.swift */,
 				D821B446FA96916CBFA3C607 /* Assets.xcassets */,
+				3607F3540A8BDB20BDB86B0C /* ConnectionProbe.swift */,
 				B7CEE9340B855EA44B670926 /* Event.swift */,
+				C6963BA8C9E3AD96E7EE8769 /* EventAnnouncement.swift */,
 				503ACEB3ACB8FD663AA6535B /* EventsApp.swift */,
 				71EB166E1C24366F438B54A7 /* EventsClient.swift */,
 				99EBC4A3EDE1E8C1F6B02717 /* Info.plist */,
+				88DCFCA40B6A9ED17A2194B2 /* Notifier.swift */,
 				2ABE1BEBE45510460320E827 /* ServerConfig.swift */,
 				9B9B88A2254BDAD14D470E1F /* Theme.swift */,
 				1A180D63F26BF6AEB173A60D /* Views */,
@@ -196,11 +211,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				8931D975CE28E3AAB0FAF1FB /* AppStore.swift in Sources */,
+				8C793EF60B9197BBC6861A2A /* ConnectionProbe.swift in Sources */,
 				61D8A607B646AD2A030184C0 /* Event.swift in Sources */,
+				5976F04D8C1AD596F3AB0ACE /* EventAnnouncement.swift in Sources */,
 				141F317E03A513474E14E24A /* EventDetailView.swift in Sources */,
 				9968EF6CFD9D77BF8210E6B5 /* EventsApp.swift in Sources */,
 				043EC9F0165AA12AC05B85A9 /* EventsClient.swift in Sources */,
 				88F22FF77C42044B5CCAF9C7 /* FeedView.swift in Sources */,
+				A210A96407D090DDD5727E1D /* Notifier.swift in Sources */,
 				1AAE48C273E60A0E9A53B073 /* RootView.swift in Sources */,
 				572BB61CC56D851F3A5FD0C5 /* ServerConfig.swift in Sources */,
 				62F31A82E16D823F2D874BE3 /* SettingsView.swift in Sources */,
@@ -212,6 +230,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F951095FF37C2761C538B69 /* ConnectionProbeTests.swift in Sources */,
+				E58F1BB9F5E4509AAC146F6A /* EventAnnouncementTests.swift in Sources */,
 				6F41E056F72A72DDF405554C /* EventModelTests.swift in Sources */,
 				9E15CDD71A138D1B4DD5DE0D /* FeedGroupingTests.swift in Sources */,
 				EFB1EDF6D9A95FD81CA4C8EE /* LiveEventsAPITests.swift in Sources */,

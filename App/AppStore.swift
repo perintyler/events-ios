@@ -78,6 +78,16 @@ final class AppStore: ObservableObject {
 
     var client: EventsClient { EventsClient(config: config) }
 
+    /// Local notifications for events that arrive while the feed is not on
+    /// screen. Owned here because `refresh` is the only thing that ever learns
+    /// an event is new.
+    let notifier = Notifier()
+
+    /// Whether the user can see the feed right now. Notifications are
+    /// suppressed while true — banner-ing a row already on screen is noise.
+    /// `RootView` drives this from the scene phase.
+    var isFeedOnScreen = true
+
     /// Whether "mark all read" would reach beyond what is on screen. True
     /// whenever a filter the server ignores is active — see `markAllRead`.
     var markAllReadIsGlobal: Bool { severityFilter != nil || unreadOnly }
@@ -134,6 +144,7 @@ final class AppStore: ObservableObject {
                 unreadOnly: unreadOnly
             )
             merge(page.events)
+            notifier.announce(page: page.events, isFeedOnScreen: isFeedOnScreen)
             // Only advance the cursor from a fresh first page; otherwise a poll
             // would rewind pagination the user has already scrolled past.
             if events.count <= pageSize { nextCursor = page.nextCursor }

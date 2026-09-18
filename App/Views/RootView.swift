@@ -2,10 +2,13 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var notifier: Notifier
     @State private var showingSettings = false
+    /// Driven so a tapped notification can push its event's detail view.
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             FeedView()
                 .navigationTitle("Events")
                 .navigationBarTitleDisplayMode(.inline)
@@ -26,6 +29,14 @@ struct RootView: View {
         // view and back.
         .task { store.start() }
         .onDisappear { store.stop() }
+        .onChange(of: notifier.tappedEventId) { _, id in
+            guard let id else { return }
+            notifier.tappedEventId = nil
+            // The detail view resolves the id against loaded events, so a tap on
+            // a notification for something scrolled out of memory lands on the
+            // feed rather than a blank screen.
+            path.append(id)
+        }
     }
 }
 
