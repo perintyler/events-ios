@@ -14,7 +14,7 @@ final class LiveEventsAPITests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         let config = ServerConfig(
-            baseURL: "http://127.0.0.1:9429", hostHeader: "", secret: ""
+            baseURL: "http://127.0.0.1:9429", secret: ""
         )
         client = EventsClient(config: config)
 
@@ -79,7 +79,7 @@ final class LiveEventsAPITests: XCTestCase {
     @MainActor
     func testLoadMoreStopsWhenAPageAddsNothingNew() async throws {
         let store = AppStore(config: ServerConfig(
-            baseURL: "http://127.0.0.1:9429", hostHeader: "", secret: ""
+            baseURL: "http://127.0.0.1:9429", secret: ""
         ))
         await store.refresh()
         let afterFirst = store.events.count
@@ -104,7 +104,7 @@ final class LiveEventsAPITests: XCTestCase {
     @MainActor
     func testLoadMoreIgnoresAPageTheServerRepeated() async throws {
         let store = AppStore(config: ServerConfig(
-            baseURL: "http://127.0.0.1:9429", hostHeader: "", secret: ""
+            baseURL: "http://127.0.0.1:9429", secret: ""
         ))
         await store.refresh()
         let before = store.events.count
@@ -128,7 +128,7 @@ final class LiveEventsAPITests: XCTestCase {
         }
 
         let store = AppStore(config: ServerConfig(
-            baseURL: "http://127.0.0.1:9429", hostHeader: "", secret: ""
+            baseURL: "http://127.0.0.1:9429", secret: ""
         ))
         await store.refresh()
         XCTAssertGreaterThan(store.unreadCount, store.events.count,

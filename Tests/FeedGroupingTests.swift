@@ -46,7 +46,7 @@ final class FeedGroupingTests: XCTestCase {
     }
 
     func testGroupingOffShowsEveryRow() {
-        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", hostHeader: "", secret: ""))
+        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", secret: ""))
         store.groupRepeats = false
         store.setEventsForTesting([
             event(id: "1", title: "MCP transports at 64% of the ceiling"),
@@ -57,7 +57,7 @@ final class FeedGroupingTests: XCTestCase {
     }
 
     func testConsecutiveRepeatsFoldWithACount() {
-        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", hostHeader: "", secret: ""))
+        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", secret: ""))
         store.groupRepeats = true
         store.setEventsForTesting([
             event(id: "1", title: "MCP transports at 64% of the ceiling"),
@@ -74,7 +74,7 @@ final class FeedGroupingTests: XCTestCase {
     /// Non-adjacent repeats stay separate: folding across a gap would reorder
     /// the feed and misreport when the run actually happened.
     func testOnlyConsecutiveRepeatsFold() {
-        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", hostHeader: "", secret: ""))
+        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", secret: ""))
         store.groupRepeats = true
         store.setEventsForTesting([
             event(id: "1", title: "MCP transports at 64% of the ceiling"),
@@ -87,7 +87,7 @@ final class FeedGroupingTests: XCTestCase {
     /// A fold whose head is read would look settled while unread repeats hide
     /// beneath it — the head must surface the unread one.
     func testFoldSurfacesAnUnreadRepeat() {
-        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", hostHeader: "", secret: ""))
+        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", secret: ""))
         store.groupRepeats = true
         store.setEventsForTesting([
             event(id: "1", title: "MCP transports at 64% of the ceiling", unread: false),
@@ -101,7 +101,7 @@ final class FeedGroupingTests: XCTestCase {
     /// Grouping is a DISPLAY concern. It must never change the unread count,
     /// or the badge would disagree with the server about how much is unread.
     func testGroupingDoesNotChangeTheUnreadCount() {
-        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", hostHeader: "", secret: ""))
+        let store = AppStore(config: .init(baseURL: "http://127.0.0.1:1", secret: ""))
         store.setEventsForTesting([
             event(id: "1", title: "MCP transports at 64% of the ceiling"),
             event(id: "2", title: "MCP transports at 65% of the ceiling"),

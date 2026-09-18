@@ -24,10 +24,12 @@ targets:
         CFBundleDisplayName: Events
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
-        # The API is plain HTTP over a tailnet, not TLS — it binds loopback on
-        # the Mac and is reached through Caddy/Tailscale.
+        # The device path is real HTTPS with a real Let's Encrypt certificate,
+        # so no ATS exception is needed for it. The one remaining plain-HTTP
+        # caller is the SIMULATOR, which talks to the proxy on 127.0.0.1:9429 —
+        # `NSAllowsLocalNetworking` permits exactly that and nothing routable.
         NSAppTransportSecurity:
-          NSAllowsArbitraryLoads: true
+          NSAllowsLocalNetworking: true
         ITSAppUsesNonExemptEncryption: false
     settings:
       base:

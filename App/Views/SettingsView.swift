@@ -2,35 +2,30 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var notifier: Notifier
     @Environment(\.dismiss) private var dismiss
 
     @State private var baseURL: String = ""
-    @State private var hostHeader: String = ""
     @State private var secret: String = ""
-    @State private var probeResult: String?
-    @State private var probeOK = false
+    @State private var outcome: ProbeOutcome?
     @State private var isProbing = false
 
     var body: some View {
         Form {
             Section {
-                TextField("http://100.x.x.x", text: $baseURL)
+                TextField(ServerConfig.defaultDeviceURL, text: $baseURL)
                     .keyboardType(.URL)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .accessibilityIdentifier("serverURLField")
-                TextField("Host header (e.g. barry.lan)", text: $hostHeader)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .accessibilityIdentifier("hostHeaderField")
-                SecureField("BARRY_SECRET (optional on the tailnet)", text: $secret)
+                SecureField("BARRY_SECRET (required on the tailnet)", text: $secret)
                     .accessibilityIdentifier("secretField")
             } header: {
                 Text("Server")
             } footer: {
-                Text("The Mac's Tailscale address. It CHANGES — find the current one "
-                     + "with `tailscale ip -4`. The host header routes the request "
-                     + "through Caddy; the raw service port is not reachable.")
+                Text("On a phone the app reaches the Mac over the tailnet at "
+                     + "\(ServerConfig.defaultDeviceURL). The secret is required "
+                     + "there — the server rejects an unauthenticated request.")
             }
 
             Section {
@@ -45,13 +40,37 @@ struct SettingsView: View {
                         }
                     }
                 }
+                .disabled(isProbing)
                 .accessibilityIdentifier("testConnectionButton")
 
-                if let probeResult {
-                    Label(probeResult, systemImage: probeOK ? "checkmark.circle" : "xmark.circle")
-                        .foregroundStyle(probeOK ? .green : .red)
-                        .font(.footnote)
-                        .accessibilityIdentifier("probeResult")
+                if let outcome {
+                    Label {
+                        Text(outcome.message)
+                    } icon: {
+                        Image(systemName: icon(for: outcome))
+                    }
+                    .foregroundStyle(tint(for: outcome))
+                    .font(.footnote)
+                    .accessibilityIdentifier("probeResult")
+                }
+            } footer: {
+                Text("Makes a real request. It tells apart a server that is not "
+                     + "reachable from one that is reachable but refused the secret.")
+            }
+
+            // Only shown when there is something to fix. Authorization is per
+            // bundle identifier and changeable only in iOS Settings, so a
+            // denial is otherwise indistinguishable from a quiet feed.
+            if notifier.wasDenied {
+                Section {
+                    Button("Open iOS Settings") { notifier.openSystemSettings() }
+                        .accessibilityIdentifier("openNotificationSettingsButton")
+                } header: {
+                    Text("Notifications")
+                } footer: {
+                    Text("Notifications are turned off for Events, so new events "
+                         + "will arrive silently. They only fire while the app is "
+                         + "running either way — there is no push.")
                 }
             }
         }
@@ -60,31 +79,33 @@ struct SettingsView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") {
-                    store.updateConfig(
-                        ServerConfig(baseURL: baseURL, hostHeader: hostHeader, secret: secret)
-                    )
+                    store.updateConfig(ServerConfig(baseURL: baseURL, secret: secret))
                     dismiss()
                 }
             }
         }
         .onAppear {
             baseURL = store.config.baseURL
-            hostHeader = store.config.hostHeader
             secret = store.config.secret
         }
+    }
+
+    /// Three states, not two: a 403 proved the network path works, so it must
+    /// not wear the same red X as a host that never answered.
+    private func icon(for outcome: ProbeOutcome) -> String {
+        if outcome.isFullyWorking { return "checkmark.circle" }
+        return outcome.isReachable ? "exclamationmark.triangle" : "xmark.circle"
+    }
+
+    private func tint(for outcome: ProbeOutcome) -> Color {
+        if outcome.isFullyWorking { return .green }
+        return outcome.isReachable ? .orange : .red
     }
 
     private func probe() async {
         isProbing = true
         defer { isProbing = false }
-        let candidate = ServerConfig(baseURL: baseURL, hostHeader: hostHeader, secret: secret)
-        do {
-            try await EventsClient(config: candidate).probe()
-            probeOK = true
-            probeResult = "Connected."
-        } catch {
-            probeOK = false
-            probeResult = error.localizedDescription
-        }
+        let candidate = ServerConfig(baseURL: baseURL, secret: secret)
+        outcome = await ConnectionProbe(config: candidate).run()
     }
 }

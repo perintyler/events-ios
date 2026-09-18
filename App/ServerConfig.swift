@@ -2,49 +2,43 @@ import Foundation
 
 /// Where the app talks to Barry, and how it authenticates.
 ///
-/// The reachability recipe is the one `bags/barry-iphone` established, reused
-/// rather than rediscovered:
-///  - Simulator: straight to the barry.works proxy on localhost.
-///  - Device: over Tailscale to the Mac, with a Host header so Caddy routes
-///    the request to the barry.works site block (which injects the API secret
-///    for trusted-network callers).
+///  - Simulator: straight to the barry.works proxy on localhost, which injects
+///    the API secret for loopback callers. Nothing to configure.
+///  - Device: HTTPS over the personal tailnet to a userspace `tailscaled`
+///    sidecar, which terminates TLS and proxies to the API on `127.0.0.1:4854`.
 ///
-/// Every Barry service binds 127.0.0.1 ONLY. There is no route to a raw
-/// service port from a phone — the tailnet address reaches Caddy on :80, and
-/// the `Host` header selects the site block. `bags/point-guard-ios` points at
-/// `100.x.x.x:3868` and its device path has never worked for exactly this
-/// reason; do not copy that shape.
+/// The device host is a real tailnet DNS name with a real Let's Encrypt
+/// certificate, so there is no certificate prompt and no pinning to do. It
+/// replaces the old `http://<tailscale-ip>` + `Host: barry.lan` Caddy route:
+/// that shape shipped a hardcoded IP that went stale within a day, and the
+/// sidecar's stable name removes the reason to edit an address at all.
 ///
-/// `defaultTailscaleHost` is a STARTING POINT, not a constant. A tailnet
-/// address changes (this Mac moved from 100.101.38.91 to 100.97.236.110 in a
-/// single day, and `bags/plans/plans-iphone` still ships the stale one). It is
-/// overridable in Settings and persisted, so a moved Mac is a text-field edit
-/// rather than a rebuild. Find the current value with `tailscale ip -4`.
+/// The secret is REQUIRED on the device path. `:4854` rejects an unauthenticated
+/// caller with 403 even from loopback — only `/health` is open — so unlike the
+/// old proxy route there is nothing upstream filling the secret in.
 struct ServerConfig: Equatable {
     var baseURL: String
-    var hostHeader: String
     var secret: String
 
     static let defaultsKeyBase = "server.baseURL"
-    static let defaultsKeyHost = "server.hostHeader"
 
     /// This app's OWN keychain item, never shared with the other Barry apps.
     /// Two apps sharing one item would mean signing out of either silently
     /// signs out the other, and the secret is cheap to enter twice.
     static let keychainSecretKey = "rocks.barry.events.secret"
 
-    static let defaultTailscaleHost = "100.97.236.110"
-    static let defaultHostHeader = "barry.lan"
+    static let defaultDeviceURL = "https://barry-mac.tail5cb2f2.ts.net:8443"
+    static let simulatorURL = "http://127.0.0.1:9429"
+
+    /// The one route on the API that answers without a secret. The probe uses
+    /// it to tell "the server is not there" apart from "the secret is wrong".
+    static let healthPath = "/health"
 
     static var platformDefault: ServerConfig {
         #if targetEnvironment(simulator)
-        ServerConfig(baseURL: "http://127.0.0.1:9429", hostHeader: "", secret: "")
+        ServerConfig(baseURL: simulatorURL, secret: "")
         #else
-        ServerConfig(
-            baseURL: "http://\(defaultTailscaleHost)",
-            hostHeader: defaultHostHeader,
-            secret: ""
-        )
+        ServerConfig(baseURL: defaultDeviceURL, secret: "")
         #endif
     }
 
@@ -59,21 +53,18 @@ struct ServerConfig: Equatable {
             if let s = args.firstIndex(of: "-eventsSecret"), args.count > s + 1 {
                 secret = args[s + 1]
             }
-            return ServerConfig(baseURL: args[i + 1], hostHeader: "", secret: secret)
+            return ServerConfig(baseURL: args[i + 1], secret: secret)
         }
 
         let d = UserDefaults.standard
         var c = platformDefault
         if let base = d.string(forKey: defaultsKeyBase), !base.isEmpty { c.baseURL = base }
-        if let host = d.string(forKey: defaultsKeyHost) { c.hostHeader = host }
         c.secret = Keychain.read(key: keychainSecretKey) ?? ""
         return c
     }
 
     func save() {
-        let d = UserDefaults.standard
-        d.set(baseURL, forKey: Self.defaultsKeyBase)
-        d.set(hostHeader, forKey: Self.defaultsKeyHost)
+        UserDefaults.standard.set(baseURL, forKey: Self.defaultsKeyBase)
         if secret.isEmpty {
             Keychain.delete(key: Self.keychainSecretKey)
         } else {
@@ -81,7 +72,7 @@ struct ServerConfig: Equatable {
         }
     }
 
-    /// Build a request for an API path, applying the host header and auth.
+    /// Build a request for an API path, applying auth.
     func request(path: String, query: [URLQueryItem] = []) -> URLRequest? {
         guard var components = URLComponents(string: baseURL) else { return nil }
         components.path = path
@@ -92,12 +83,10 @@ struct ServerConfig: Equatable {
         return req
     }
 
-    /// The tailnet is trusted by `packages/auth`, so the secret is usually
-    /// unnecessary today — the proxy injects one. It is still sent when set so
-    /// the app keeps working if that trust ever narrows (BARRY_TAILSCALE_IPS
-    /// can restrict to a device allowlist).
+    /// `packages/auth` accepts the secret as either `x-barry-secret` or
+    /// `Authorization: Bearer`. The header is the simpler of the two — no
+    /// scheme prefix to get wrong — so that is what this sends.
     func apply(to req: inout URLRequest) {
-        if !hostHeader.isEmpty { req.setValue(hostHeader, forHTTPHeaderField: "Host") }
         if !secret.isEmpty { req.setValue(secret, forHTTPHeaderField: "x-barry-secret") }
     }
 }
