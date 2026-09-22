@@ -1,6 +1,6 @@
 name: Events
 options:
-  bundleIdPrefix: rocks.barry.events
+  bundleIdPrefix: ${BARRY_BUNDLE_PREFIX}.events
   deploymentTarget:
     iOS: "17.0"
   createIntermediateGroups: true
