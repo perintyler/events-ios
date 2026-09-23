@@ -12,12 +12,23 @@ settings:
     # rather than editing it in here, which keeps that property intact.
     CODE_SIGNING_ALLOWED: "NO"
     CODE_SIGN_IDENTITY: ""
+# BarryKit carries the generated OpenAPI client, built from the same
+# sdk/contracts schemas the server validates against -- so a field the API
+# changes becomes a compile error here rather than a silently empty list on a
+# polling screen. Relative path: this repo and BarryKit are siblings under
+# ~/repos/bags.
+packages:
+  BarryKit:
+    path: ../../BarryKit
+
 targets:
   Events:
     type: application
     platform: iOS
     sources:
       - App
+    dependencies:
+      - package: BarryKit
     info:
       path: App/Info.plist
       properties:
