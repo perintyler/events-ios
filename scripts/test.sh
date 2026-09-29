@@ -3,24 +3,25 @@
 # run the whole suite against a real booted simulator, talking to the real
 # locally-running Barry API. No mocks.
 set -euo pipefail
+BASE="$(barry service url gateway.gateway 2>/dev/null || true)"
 cd "$(dirname "$0")/.."
 
 SIM_NAME="${EVENTS_IOS_SIM:-iPhone 16 Pro}"
 SCHEME="Events"
-API="http://127.0.0.1:9429/api/v1/events?limit=1"
+API="$BASE/api/v1/events?limit=1"
 
 export PATH="/opt/homebrew/bin:$PATH"
 
 # Say out loud which suite you are getting. The live tests XCTSkip when the API
 # is down, and a skip reads identically to a pass in the summary line — so the
 # one thing this probe must never do is stay quiet about it.
-echo "==> Checking the Barry API is reachable (127.0.0.1:9429)..."
+echo "==> Checking the Barry API is reachable (gateway.gateway)..."
 if curl -sf -m 3 "$API" >/dev/null; then
   echo "    reachable — live integration tests will RUN."
 else
   echo "!!  NOT reachable — every live test will SKIP, not fail."
   echo "    Unit tests still run. Start the API with:"
-  echo "      launchctl kickstart -k gui/\$(id -u)/com.barry.api"
+  echo "      barry service start gateway.gateway"
 fi
 
 # Resolve the simulator to a UDID and target it by id, not by name.
