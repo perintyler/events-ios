@@ -139,8 +139,8 @@ struct ConnectionProbe {
         case .decoding(let detail):
             return .badResponse(detail)
         case .http(let status, let detail):
-            // 403, not 401: `requireWebAuth` in packages/auth returns forbidden
-            // for an unauthenticated caller.
+            // 403, not 401: Barry's auth answers a request without the
+            // instance secret with forbidden.
             return status == 403 ? .reachableButUnauthorized : .serverError(status: status, detail: detail)
         }
     }

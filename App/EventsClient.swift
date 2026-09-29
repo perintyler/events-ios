@@ -10,8 +10,8 @@ enum EventsError: LocalizedError, Equatable {
         case .badURL:
             return "The server URL is not valid."
         case .http(let code, let detail):
-            // 403, not 401: `requireWebAuth` in packages/auth returns forbidden
-            // for an unauthenticated caller. Saying "check the secret" for a
+            // 403, not 401: Barry's auth answers a request without the
+            // instance secret with forbidden. Saying "check the secret" for a
             // 401 the server never sends would send someone hunting the wrong
             // setting.
             if code == 403 {

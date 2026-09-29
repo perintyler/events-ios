@@ -1,4 +1,5 @@
 import Foundation
+import BarryKit
 
 /// Where the app talks to Barry, and how it authenticates.
 ///
@@ -42,7 +43,10 @@ struct ServerConfig: Equatable {
     static let keychainSecretKey = "rocks.barry.events.secret"
 
     static let defaultDeviceURL = "https://barry-mac.tail5cb2f2.ts.net:8443"
-    static let simulatorURL = "http://127.0.0.1:9429"
+    /// The gateway on the host Mac, from its instance registry (the simulator
+    /// shares the Mac's files); it attaches the secret for loopback callers.
+    /// Empty when the instance lists none.
+    static var simulatorURL: String { BarryInstance.serviceURL("gateway.gateway")?.absoluteString ?? "" }
 
     /// The one route on the API that answers without a secret. The probe uses
     /// it to tell "the server is not there" apart from "the secret is wrong".
