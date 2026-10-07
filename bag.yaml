@@ -10,15 +10,18 @@ description: The Barry event feed on a phone — read, filter, and clear the bac
 # cannot be named here, and this is the closest honest declaration.
 requires:
   events:
-    reason: the app is a read client of the events feed, and ships no backend of its own
+    reason: the app is a read client of the events feed, and ships no backend of its
+      own
 
 apps:
   EventsiOS:
     description: Read and triage the Barry event feed from a phone
     platform: ios
-    project: .
-    scheme: Events
-    bundle-id: rocks.barry.events.app
-    # No paid-only entitlements (no app groups, push, or keychain sharing), so
-    # a free personal team can sign this for a device.
-    device: true
+    name: EventsiOS
+    build:
+      project: Events.xcodeproj
+      scheme: Events
+    output: .build/Events.app
+    ios:
+      bundle-id: rocks.barry.events.app
+      device: true
