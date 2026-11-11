@@ -1,0 +1,16 @@
+# EventsiOS, ported from the `apps.EventsiOS` entry bag.yaml used to carry.
+# `barry app install ~/repos/bags/events-ui/events-ios` runs
+# scripts/build-device.sh, an iOS device build (set BARRY_IOS_TEAM_ID or sign
+# into Xcode), and prints how to put the bundle on a phone.
+#
+# The bundle id (rocks.barry.events.app) comes from project.yml's bundleIdPrefix
+# and BARRY_BUNDLE_PREFIX (default rocks.barry); this manifest has no field
+# for it.
+name: events-ios
+description: Read and triage the Barry event feed from a phone
+bags:
+  - events
+build: build:app
+install:
+  ios-device:
+    bundle: .build/Events.app

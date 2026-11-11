@@ -13,15 +13,5 @@ requires:
     reason: the app is a read client of the events feed, and ships no backend of its
       own
 
-apps:
-  EventsiOS:
-    description: Read and triage the Barry event feed from a phone
-    platform: ios
-    name: EventsiOS
-    build:
-      project: Events.xcodeproj
-      scheme: Events
-    output: .build/Events.app
-    ios:
-      bundle-id: rocks.barry.events.app
-      device: true
+# The phone app declares itself in barry.app.yaml beside this file (`apps:` is
+# gone from bag.yaml): `barry app install ~/repos/bags/events-ui/events-ios`.

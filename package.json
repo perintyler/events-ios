@@ -1,0 +1,7 @@
+{
+  "name": "@barry-bags/events-ios",
+  "private": true,
+  "scripts": {
+    "build:app": "bash scripts/build-device.sh"
+  }
+}

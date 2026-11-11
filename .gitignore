@@ -4,3 +4,5 @@ xcuserdata/
 DerivedData/
 # `barry ios build` puts DerivedData here so builds do not collide with Xcode's.
 .build-barry-ios/
+# The device build (scripts/build-device.sh) writes the bundle here.
+.build/
